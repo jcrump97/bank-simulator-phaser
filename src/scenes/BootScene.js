@@ -116,7 +116,7 @@ export default class BootScene extends Phaser.Scene {
   }
 
   createDynamicBackground(width, height) {
-    // Create gradient background
+    // Create background
     const bg = this.add.graphics();
     bg.fillStyle(0x1a1e36, 1);
     bg.fillRect(0, 0, width, height);
