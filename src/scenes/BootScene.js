@@ -2,6 +2,9 @@ export default class BootScene extends Phaser.Scene {
   constructor() {
     super('BootScene');
     this.gridSize = 40;
+    this.overlay = null;
+    this.background = null;
+    this.gridGraphics = [];
   }
 
   create() {
@@ -12,9 +15,9 @@ export default class BootScene extends Phaser.Scene {
     this.createDynamicBackground(width, height);
     
     // Add semi-transparent overlay
-    const overlay = this.add.graphics();
-    overlay.fillStyle(0x1a1e36, 0.7);
-    overlay.fillRect(0, 0, width, height);
+    this.overlay = this.add.graphics();
+    this.overlay.fillStyle(0x1a1e36, 0.7);
+    this.overlay.fillRect(0, 0, width, height);
 
     // Center position for title
     const centerX = width / 2;
@@ -117,18 +120,20 @@ export default class BootScene extends Phaser.Scene {
 
   createDynamicBackground(width, height) {
     // Create gradient background
-    const bg = this.add.graphics();
-    bg.fillStyle(0x1a1e36, 1);
-    bg.fillRect(0, 0, width, height);
+    this.background = this.add.graphics();
+    this.background.fillStyle(0x1a1e36, 1);
+    this.background.fillRect(0, 0, width, height);
 
     // Calculate grid based on screen size
     this.gridSize = Math.min(width, height) / 20;
+    this.gridGraphics = [];
 
     // Create grid pattern
     for (let x = 0; x < width; x += this.gridSize) {
       for (let y = 0; y < height; y += this.gridSize) {
         const node = this.add.circle(x, y, 2, 0x4a5194, 0.5);
-        
+        this.gridGraphics.push(node);
+
         this.tweens.add({
           targets: node,
           scale: { from: 0.8, to: 1.2 },
@@ -142,9 +147,57 @@ export default class BootScene extends Phaser.Scene {
     }
   }
 
+  // Resize background and overlay when the screen size changes
   resize(gameSize) {
     const width = gameSize.width;
     const height = gameSize.height;
+    // Update overlay and grid to match new size before resizing camera
+    if (this.background) {
+      this.background.clear();
+      this.background.fillStyle(0x1a1e36, 1);
+      this.background.fillRect(0, 0, width, height);
+    }
+
+    if (this.overlay) {
+      this.overlay.clear();
+      this.overlay.fillStyle(0x1a1e36, 0.7);
+      this.overlay.fillRect(0, 0, width, height);
+    }
+
+    if (this.gridGraphics) {
+      this.gridSize = Math.min(width, height) / 20;
+
+      let index = 0;
+      for (let x = 0; x < width; x += this.gridSize) {
+        for (let y = 0; y < height; y += this.gridSize) {
+          let node;
+          if (index < this.gridGraphics.length) {
+            node = this.gridGraphics[index];
+            node.setVisible(true);
+          } else {
+            node = this.add.circle(x, y, 2, 0x4a5194, 0.5);
+            this.gridGraphics.push(node);
+
+            this.tweens.add({
+              targets: node,
+              scale: { from: 0.8, to: 1.2 },
+              alpha: { from: 0.3, to: 0.6 },
+              duration: 1500 + Math.random() * 1000,
+              yoyo: true,
+              repeat: -1,
+              ease: 'Sine.easeInOut'
+            });
+          }
+          node.setPosition(x, y);
+          index++;
+        }
+      }
+
+      for (; index < this.gridGraphics.length; index++) {
+        this.gridGraphics[index].setVisible(false);
+      }
+    }
+
     this.cameras.resize(width, height);
   }
 }
