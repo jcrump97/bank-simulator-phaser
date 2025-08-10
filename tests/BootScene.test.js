@@ -30,7 +30,9 @@ describe('BootScene', () => {
     });
     const textMock = () => ({
       setOrigin: jest.fn().mockReturnThis(),
-      setShadow: jest.fn()
+      setShadow: jest.fn(),
+      setFontSize: jest.fn().mockReturnThis(),
+      setPosition: jest.fn().mockReturnThis()
     });
 
     scene.scale = { width: 800, height: 600, on: jest.fn() };
