@@ -41,8 +41,8 @@ describe('BootScene', () => {
       circle: jest.fn(() => ({}))
     };
     scene.tweens = { add: jest.fn() };
-    scene.createButton = jest.fn();
     scene.cameras = { resize: jest.fn() };
+    jest.spyOn(scene, 'createButton');
     return scene;
   }
 
@@ -52,5 +52,33 @@ describe('BootScene', () => {
 
     expect(scene.scale.on).toHaveBeenCalledWith('resize', scene.resize, scene);
     expect(scene.gridSize).toBe(Math.min(scene.scale.width, scene.scale.height) / 20);
+  });
+
+  test('creates three menu buttons', () => {
+    const scene = createScene();
+    scene.create();
+
+    expect(scene.createButton).toHaveBeenCalledTimes(3);
+    expect(scene.createButton).toHaveBeenNthCalledWith(
+      1,
+      expect.any(Number),
+      expect.any(Number),
+      'Start Game',
+      expect.any(Function)
+    );
+    expect(scene.createButton).toHaveBeenNthCalledWith(
+      2,
+      expect.any(Number),
+      expect.any(Number),
+      'Load Game',
+      expect.any(Function)
+    );
+    expect(scene.createButton).toHaveBeenNthCalledWith(
+      3,
+      expect.any(Number),
+      expect.any(Number),
+      'Options',
+      expect.any(Function)
+    );
   });
 });
