@@ -35,17 +35,21 @@ export default class BootScene extends Phaser.Scene {
     const buttonStartY = height * 0.4;
     const buttonSpacing = height * 0.1;
 
-    // Create buttons
-    this.createButton(centerX, buttonStartY, 'Start Game', () => {
-      console.log('Starting game...');
-      // this.scene.start('GameScene');
+    // Create buttons for game modes
+    this.createButton(centerX, buttonStartY, 'Teller Mode', () => {
+      this.scene.start('TellerScene');
     });
 
-    this.createButton(centerX, buttonStartY + buttonSpacing, 'Load Game', () => {
+    this.createButton(centerX, buttonStartY + buttonSpacing, 'Personal Banker Mode', () => {
+      this.scene.start('PersonalBankerScene');
+    });
+
+    // Additional placeholder buttons
+    this.createButton(centerX, buttonStartY + (buttonSpacing * 2), 'Load Game', () => {
       console.log('Load Game functionality not implemented yet.');
     });
 
-    this.createButton(centerX, buttonStartY + (buttonSpacing * 2), 'Options', () => {
+    this.createButton(centerX, buttonStartY + (buttonSpacing * 3), 'Options', () => {
       console.log('Options functionality not implemented yet.');
     });
 

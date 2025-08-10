@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import BootScene from './scenes/BootScene';
+import TellerScene from './scenes/TellerScene';
+import PersonalBankerScene from './scenes/PersonalBankerScene';
 
 const config = {
   type: Phaser.AUTO,
@@ -18,7 +20,7 @@ const config = {
     }
   },
   backgroundColor: '#1a1e36',
-  scene: [BootScene]
+  scene: [BootScene, TellerScene, PersonalBankerScene]
 };
 
 const game = new Phaser.Game(config);
