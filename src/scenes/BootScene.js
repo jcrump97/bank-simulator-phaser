@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { customerStore, seedSampleCustomers } from '../data/CustomerStore';
 
 export default class BootScene extends Phaser.Scene {
   constructor() {
@@ -13,6 +14,10 @@ export default class BootScene extends Phaser.Scene {
   }
 
   create() {
+    // load any stored customer data and seed defaults
+    customerStore.load();
+    seedSampleCustomers();
+
     // Get screen dimensions
     const width = this.scale.width;
     const height = this.scale.height;
