@@ -122,8 +122,8 @@ export default class BootScene extends Phaser.Scene {
     return button;
   }
 
+  // Draws a solid-color backdrop and animated grid
   createDynamicBackground(width, height) {
-    // Create gradient background
     this.background = this.add.graphics();
     this.background.fillStyle(0x1a1e36, 1);
     this.background.fillRect(0, 0, width, height);
