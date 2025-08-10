@@ -42,7 +42,7 @@ export default class BootScene extends Phaser.Scene {
     });
 
     this.createButton(centerX, buttonStartY + buttonSpacing, 'Load Game', () => {
-      console.log('Load Game functionality not implemented yet.');
+      console.log('Load game functionality not implemented yet.');
     });
 
     this.createButton(centerX, buttonStartY + (buttonSpacing * 2), 'Options', () => {
