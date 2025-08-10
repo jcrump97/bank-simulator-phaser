@@ -9,7 +9,7 @@ const PhaserStub = {
   }
 };
 
-global.Phaser = PhaserStub;
+jest.mock('phaser', () => PhaserStub);
 
 describe('BootScene', () => {
   let BootScene;
