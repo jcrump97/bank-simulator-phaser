@@ -69,54 +69,57 @@ export default class BootScene extends Phaser.Scene {
   createButton(x, y, label, callback) {
     // Create a container for the button
     const button = this.add.container(x, y);
-    
-    // Create button background using graphics
-    const background = this.add.graphics();
-    const buttonWidth = 200;
-    const buttonHeight = 40;
-    const cornerRadius = 10;
-    
-    // Default state
-    const drawButton = (color) => {
-      background.clear();
-      background.fillStyle(color, 1);
-      background.fillRoundedRect(-buttonWidth/2, -buttonHeight/2, buttonWidth, buttonHeight, cornerRadius);
-    };
-    
-    // Initial draw
-    drawButton(0x4a5194);
-    
-    // Make interactive
-    const hitArea = new Phaser.Geom.Rectangle(-buttonWidth/2, -buttonHeight/2, buttonWidth, buttonHeight);
-    background.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
-    
-    // Add hover effects
-    background.on('pointerover', () => {
-      drawButton(0x5b63b0);
-      buttonText.setScale(1.05);
-    });
-    
-    background.on('pointerout', () => {
-      drawButton(0x4a5194);
-      buttonText.setScale(1);
-    });
-    
-    background.on('pointerdown', () => {
-      drawButton(0x3b4273);
-      callback();
-    });
-    
-    background.on('pointerup', () => {
-      drawButton(0x5b63b0);
-    });
 
-    // Add button text
+    // Create button text first to measure its size
     const buttonText = this.add.text(0, 0, label, {
       fontSize: '24px',
       color: '#ffffff',
       fontFamily: 'Arial',
       align: 'center'
     }).setOrigin(0.5);
+
+    const horizontalPadding = 40;
+    const verticalPadding = 20;
+    const buttonWidth = buttonText.width + horizontalPadding;
+    const buttonHeight = buttonText.height + verticalPadding;
+    const cornerRadius = 10;
+
+    // Create button background using graphics sized to text
+    const background = this.add.graphics();
+
+    // Default state
+    const drawButton = (color) => {
+      background.clear();
+      background.fillStyle(color, 1);
+      background.fillRoundedRect(-buttonWidth/2, -buttonHeight/2, buttonWidth, buttonHeight, cornerRadius);
+    };
+
+    // Initial draw
+    drawButton(0x4a5194);
+
+    // Make interactive
+    const hitArea = new Phaser.Geom.Rectangle(-buttonWidth/2, -buttonHeight/2, buttonWidth, buttonHeight);
+    background.setInteractive(hitArea, Phaser.Geom.Rectangle.Contains);
+
+    // Add hover effects
+    background.on('pointerover', () => {
+      drawButton(0x5b63b0);
+      buttonText.setScale(1.05);
+    });
+
+    background.on('pointerout', () => {
+      drawButton(0x4a5194);
+      buttonText.setScale(1);
+    });
+
+    background.on('pointerdown', () => {
+      drawButton(0x3b4273);
+      callback();
+    });
+
+    background.on('pointerup', () => {
+      drawButton(0x5b63b0);
+    });
 
     // Add both background and text to the container
     button.add([background, buttonText]);

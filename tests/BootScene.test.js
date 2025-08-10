@@ -64,4 +64,41 @@ describe('BootScene', () => {
     expect(labels).toContain('Teller Mode');
     expect(labels).toContain('Personal Banker Mode');
   });
+
+  test('createButton sizes background to fit text', () => {
+    const scene = new BootScene();
+    const graphics = {
+      fillStyle: jest.fn().mockReturnThis(),
+      fillRect: jest.fn().mockReturnThis(),
+      clear: jest.fn().mockReturnThis(),
+      fillRoundedRect: jest.fn().mockReturnThis(),
+      setInteractive: jest.fn().mockReturnThis(),
+      on: jest.fn()
+    };
+    const textObj = {
+      width: 250,
+      height: 24,
+      setOrigin: jest.fn().mockReturnThis(),
+      setShadow: jest.fn(),
+      setFontSize: jest.fn().mockReturnThis(),
+      setPosition: jest.fn().mockReturnThis(),
+      setScale: jest.fn().mockReturnThis()
+    };
+    scene.add = {
+      graphics: jest.fn(() => graphics),
+      text: jest.fn(() => textObj),
+      container: jest.fn(() => ({ add: jest.fn() }))
+    };
+    scene.tweens = { add: jest.fn() };
+
+    scene.createButton(0, 0, 'Personal Banker Mode', jest.fn());
+
+    expect(graphics.fillRoundedRect).toHaveBeenCalledWith(
+      expect.any(Number),
+      expect.any(Number),
+      textObj.width + 40,
+      textObj.height + 20,
+      10
+    );
+  });
 });
