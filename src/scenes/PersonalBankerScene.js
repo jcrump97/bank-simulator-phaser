@@ -1,10 +1,14 @@
 export default class PersonalBankerScene extends Phaser.Scene {
   constructor() {
     super('PersonalBankerScene');
+    this.title = null;
+    this.messages = [];
   }
 
   create() {
-    this.add.text(10, 10, 'Personal Banker Mode', { fontSize: '32px', color: '#ffffff' });
+    const width = this.scale.width;
+    const height = this.scale.height;
+    this.title = this.add.text(0, 0, 'Personal Banker Mode', { fontSize: '32px', color: '#ffffff' });
     this.applications = [
       { type: 'loan', amount: 10000, business: true },
       { type: 'checking', business: false },
@@ -12,10 +16,15 @@ export default class PersonalBankerScene extends Phaser.Scene {
       { type: 'cd', term: 12, business: false }
     ];
 
-    this.applications.forEach((app, index) => {
+    this.messages = [];
+    this.applications.forEach((app) => {
       const message = this.handleApplication(app);
-      this.add.text(10, 60 + index * 20, message, { fontSize: '20px', color: '#ffffff' });
+      const text = this.add.text(0, 0, message, { fontSize: '20px', color: '#ffffff' });
+      this.messages.push(text);
     });
+
+    this.reposition(width, height);
+    this.scale.on('resize', this.resize, this);
   }
 
   handleApplication(app) {
@@ -32,5 +41,25 @@ export default class PersonalBankerScene extends Phaser.Scene {
       default:
         return 'Unknown application';
     }
+  }
+
+  reposition(width, height) {
+    const marginX = width * 0.02;
+    const marginY = height * 0.02;
+    const lineHeight = Math.min(height * 0.05, 30);
+
+    if (this.title) {
+      this.title.setFontSize(Math.min(width / 25, 32));
+      this.title.setPosition(marginX, marginY);
+    }
+
+    this.messages.forEach((text, index) => {
+      text.setFontSize(Math.min(width / 40, 20));
+      text.setPosition(marginX, marginY + (index + 1) * lineHeight);
+    });
+  }
+
+  resize(gameSize) {
+    this.reposition(gameSize.width, gameSize.height);
   }
 }
