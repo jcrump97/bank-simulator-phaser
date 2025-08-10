@@ -2,20 +2,29 @@ export default class TellerScene extends Phaser.Scene {
   constructor() {
     super('TellerScene');
     this.balance = 0;
+    this.title = null;
+    this.messages = [];
   }
 
   create() {
-    this.add.text(10, 10, 'Teller Mode', { fontSize: '32px', color: '#ffffff' });
+    const width = this.scale.width;
+    const height = this.scale.height;
+    this.title = this.add.text(0, 0, 'Teller Mode', { fontSize: '32px', color: '#ffffff' });
     this.customers = [
       { type: 'deposit', amount: 100 },
       { type: 'withdrawal', amount: 50 },
       { type: 'suspicious', amount: 1000 }
     ];
 
-    this.customers.forEach((customer, index) => {
+    this.messages = [];
+    this.customers.forEach((customer) => {
       const message = this.handleCustomer(customer);
-      this.add.text(10, 60 + index * 20, message, { fontSize: '20px', color: '#ffffff' });
+      const text = this.add.text(0, 0, message, { fontSize: '20px', color: '#ffffff' });
+      this.messages.push(text);
     });
+
+    this.reposition(width, height);
+    this.scale.on('resize', this.resize, this);
   }
 
   handleCustomer(customer) {
@@ -31,5 +40,25 @@ export default class TellerScene extends Phaser.Scene {
       default:
         return 'Unknown transaction';
     }
+  }
+
+  reposition(width, height) {
+    const marginX = width * 0.02;
+    const marginY = height * 0.02;
+    const lineHeight = Math.min(height * 0.05, 30);
+
+    if (this.title) {
+      this.title.setFontSize(Math.min(width / 25, 32));
+      this.title.setPosition(marginX, marginY);
+    }
+
+    this.messages.forEach((text, index) => {
+      text.setFontSize(Math.min(width / 40, 20));
+      text.setPosition(marginX, marginY + (index + 1) * lineHeight);
+    });
+  }
+
+  resize(gameSize) {
+    this.reposition(gameSize.width, gameSize.height);
   }
 }
