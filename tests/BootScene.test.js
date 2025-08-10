@@ -53,4 +53,13 @@ describe('BootScene', () => {
     expect(scene.scale.on).toHaveBeenCalledWith('resize', scene.resize, scene);
     expect(scene.gridSize).toBe(Math.min(scene.scale.width, scene.scale.height) / 20);
   });
+
+  test('creates buttons for both game modes', () => {
+    const scene = createScene();
+    scene.create();
+
+    const labels = scene.createButton.mock.calls.map(call => call[2]);
+    expect(labels).toContain('Teller Mode');
+    expect(labels).toContain('Personal Banker Mode');
+  });
 });
