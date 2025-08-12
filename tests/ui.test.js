@@ -31,6 +31,13 @@ describe('OS-like UI', () => {
     expect(header.textContent).toContain('Customers');
   });
 
+  test('shows customer list when icon is clicked', () => {
+    const customersIcon = document.querySelector('[data-app="customers"]');
+    customersIcon.click();
+    const rows = document.querySelectorAll('.customer-list tbody tr');
+    expect(rows.length).toBeGreaterThan(0);
+  });
+
   test('shows transaction form', () => {
     const txIcon = document.querySelector('[data-app="transactions"]');
     txIcon.click();

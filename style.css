@@ -70,6 +70,45 @@ html, body {
   font-size: 1.2rem;
   cursor: pointer;
 }
+
+/* customer list */
+.customer-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.customer-list th,
+.customer-list td {
+  padding: 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+@media (max-width: 600px) {
+  .customer-list table,
+  .customer-list thead,
+  .customer-list tbody,
+  .customer-list th,
+  .customer-list td,
+  .customer-list tr {
+    display: block;
+    width: 100%;
+  }
+  .customer-list tr { margin-bottom: 0.5rem; }
+  .customer-list td {
+    padding-left: 50%;
+    position: relative;
+  }
+  .customer-list td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 0.5rem;
+    font-weight: bold;
+    text-align: left;
+  }
+}
 @media (max-width: 600px) {
   .app-icon {
     width: 70px;

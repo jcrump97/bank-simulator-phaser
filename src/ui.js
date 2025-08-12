@@ -2,6 +2,7 @@ import AccountManager from './services/AccountManager.js';
 import Ledger from './services/Ledger.js';
 import JournalEntry from './models/JournalEntry.js';
 import KPIService from './services/KPIService.js';
+import renderCustomers from './ui/customers.js';
 
 const accountManager = new AccountManager();
 const ledger = new Ledger(accountManager);
@@ -120,7 +121,11 @@ export function initUI(rootDocument = document) {
     if (!icon) return;
     const app = icon.dataset.app;
     if (app === 'customers') {
-      createWindow('Customers', 'Customer management coming soon.');
+      const sampleQueue = [
+        { name: 'Alice Smith', patience: 5, status: 'waiting' },
+        { name: 'Bob Johnson', patience: 3, status: 'waiting' }
+      ];
+      createWindow('Customers', renderCustomers(rootDocument, sampleQueue));
     } else if (app === 'accounts') {
       createWindow('Accounts', 'Account information coming soon.');
     } else if (app === 'transactions') {
