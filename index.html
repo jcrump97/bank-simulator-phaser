@@ -1,25 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bank Simulator</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-    }
-    #game {
-      width: 100%;
-      height: 100%;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bank Simulator OS</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="game"></div>
-  <script type="module" src="src/main.js"></script>
+  <header class="top-bar">Bank Simulator OS</header>
+  <main id="desktop" class="desktop">
+    <button class="app-icon" data-app="customers">Customers</button>
+    <button class="app-icon" data-app="accounts">Accounts</button>
+    <button class="app-icon" data-app="transactions">Transactions</button>
+  </main>
+  <div id="window-container"></div>
+  <script type="module" src="src/ui.js"></script>
 </body>
 </html>
