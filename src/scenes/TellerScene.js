@@ -32,9 +32,11 @@ export default class TellerScene extends Phaser.Scene {
     this.initializeServices();
     this.createUI();
     this.startCustomerQueue();
-    
+
     this.reposition(width, height);
     this.scale.on('resize', this.handleResize, this);
+    // Clean up DOM elements and listeners when the scene shuts down
+    this.events.once('shutdown', this.shutdown, this);
   }
 
   initializeServices() {
@@ -262,9 +264,10 @@ export default class TellerScene extends Phaser.Scene {
 
   serveCustomer(customer) {
     this.currentCustomer = customer;
-    
+
     // Clear previous customer display
-    this.currentCustomerDisplay.removeAll();
+    // Destroy existing children to prevent lingering interactive elements
+    this.currentCustomerDisplay.removeAll(true);
     
     // Re-add the title
     const currentTitle = this.add.text(0, 0, 'Current Customer', {
@@ -407,20 +410,21 @@ export default class TellerScene extends Phaser.Scene {
 
   updateTransactionHistoryDisplay() {
     if (!this.transactionListContainer) return;
-    
-    // Remove old transaction texts (keep the title)
-    const children = this.transactionListContainer.getAll();
-    const title = children[0]; // Keep the title
+    // Preserve the title (first child) and remove old entries
+    const [title, ...items] = this.transactionListContainer.list;
+    items.forEach(child => child.destroy());
     this.transactionListContainer.removeAll();
-    this.transactionListContainer.add(title);
-    
+    if (title) {
+      this.transactionListContainer.add(title);
+    }
+
     this.transactionHistory.forEach((transaction, index) => {
-      const transactionText = this.add.text(0, 30 + index * 25, 
+      const transactionText = this.add.text(0, 30 + index * 25,
         `${transaction.customer}: ${transaction.description}`, {
         fontSize: '12px',
         color: '#ffffff'
       });
-      
+
       this.transactionListContainer.add(transactionText);
     });
   }
