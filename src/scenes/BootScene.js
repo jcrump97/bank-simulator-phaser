@@ -10,6 +10,7 @@ export default class BootScene extends Phaser.Scene {
     this.title = null;
     this.buttons = [];
     this.credits = null;
+    this.resizeTimeout = null; // Add debouncing for resize events
   }
 
   create() {
@@ -49,6 +50,11 @@ export default class BootScene extends Phaser.Scene {
     });
     if (pbButton) this.buttons.push(pbButton);
 
+    const accountingButton = this.createButton(0, 0, 'Accounting Mode', () => {
+      this.scene.start('AccountingScene');
+    });
+    if (accountingButton) this.buttons.push(accountingButton);
+
     const loadButton = this.createButton(0, 0, 'Load Game', () => {
       console.log('Load Game functionality not implemented yet.');
     });
@@ -62,8 +68,19 @@ export default class BootScene extends Phaser.Scene {
     // Position elements for initial layout
     this.repositionElements(width, height);
 
-    // Handle resize
-    this.scale.on('resize', this.resize, this);
+    // Handle resize with debouncing
+    this.scale.on('resize', this.handleResize, this);
+  }
+
+  // Debounced resize handler to prevent excessive repositioning
+  handleResize(gameSize) {
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+    }
+    
+    this.resizeTimeout = setTimeout(() => {
+      this.resize(gameSize);
+    }, 100); // 100ms debounce delay
   }
 
   createButton(x, y, label, callback) {
@@ -235,5 +252,18 @@ export default class BootScene extends Phaser.Scene {
 
     this.repositionElements(width, height);
     this.cameras.resize(width, height);
+  }
+
+  // Clean up resources when scene is destroyed
+  shutdown() {
+    if (this.resizeTimeout) {
+      clearTimeout(this.resizeTimeout);
+      this.resizeTimeout = null;
+    }
+    
+    // Remove resize event listener
+    if (this.scale) {
+      this.scale.off('resize', this.handleResize, this);
+    }
   }
 }
