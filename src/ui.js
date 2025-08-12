@@ -2,15 +2,49 @@ import AccountManager from './services/AccountManager.js';
 import Ledger from './services/Ledger.js';
 import JournalEntry from './models/JournalEntry.js';
 import KPIService from './services/KPIService.js';
+import IndexedDBService from './services/IndexedDBService.js';
 
-const accountManager = new AccountManager();
-const ledger = new Ledger(accountManager);
-const kpiService = new KPIService(accountManager);
+let accountManager = new AccountManager();
+let ledger = new Ledger(accountManager);
+let kpiService = new KPIService(accountManager);
+const dbService = new IndexedDBService();
 
 export function initUI(rootDocument = document) {
   const desktop = rootDocument.getElementById('desktop');
   const windowContainer = rootDocument.getElementById('window-container');
+  const saveBtn = rootDocument.getElementById('save-btn');
+  const loadBtn = rootDocument.getElementById('load-btn');
+  const status = rootDocument.getElementById('status-message');
   let activeWindow = null;
+
+  saveBtn?.addEventListener('click', async () => {
+    try {
+      const snapshot = {
+        accounts: accountManager.toJSON(),
+        ledger: ledger.toJSON()
+      };
+      await dbService.saveSnapshot(snapshot);
+      if (status) status.textContent = 'Saved';
+    } catch (err) {
+      if (status) status.textContent = 'Save failed';
+    }
+  });
+
+  loadBtn?.addEventListener('click', async () => {
+    try {
+      const snapshot = await dbService.loadSnapshot();
+      if (!snapshot || !snapshot.data) {
+        if (status) status.textContent = 'No snapshot';
+        return;
+      }
+      accountManager = AccountManager.fromJSON(snapshot.data.accounts);
+      ledger = Ledger.fromJSON(snapshot.data.ledger, accountManager);
+      kpiService = new KPIService(accountManager);
+      if (status) status.textContent = 'Loaded';
+    } catch (err) {
+      if (status) status.textContent = 'Load failed';
+    }
+  });
 
   function createWindow(title, content) {
     if (activeWindow) {
