@@ -1,6 +1,6 @@
 export default {
   // Use the repository name as the base so built assets resolve correctly on GitHub Pages
-  base: '/bank-simulator-phaser/',
+  base: '/bank-simulator/',
   server: {
     open: true
   }

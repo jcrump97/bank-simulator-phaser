@@ -1,5 +1,5 @@
 {
-  "name": "bank-simulator-phaser",
+  "name": "bank-simulator",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,9 +13,6 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "phaser": "^3.87.0"
-  },
   "devDependencies": {
     "@babel/core": "^7.27.4",
     "@babel/preset-env": "^7.27.2",
