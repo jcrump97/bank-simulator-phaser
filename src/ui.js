@@ -1,8 +1,9 @@
+import IndexedDBService from './services/IndexedDBService.js';
+import renderCustomers from './ui/customers.js';
 import AccountManager from './services/AccountManager.js';
 import Ledger from './services/Ledger.js';
 import JournalEntry from './models/JournalEntry.js';
 import KPIService from './services/KPIService.js';
-import IndexedDBService from './services/IndexedDBService.js';
 
 let accountManager = new AccountManager();
 let ledger = new Ledger(accountManager);
@@ -157,7 +158,7 @@ export function initUI(rootDocument = document) {
     if (!icon) return;
     const app = icon.dataset.app;
     if (app === 'customers') {
-      createWindow('Customers', 'Customer management coming soon.');
+      createWindow('Customers', renderCustomers(rootDocument));
     } else if (app === 'accounts') {
       createWindow('Accounts', 'Account information coming soon.');
     } else if (app === 'transactions') {
