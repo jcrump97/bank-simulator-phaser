@@ -25,6 +25,7 @@ export function initUI(rootDocument = document) {
     const titleSpan = rootDocument.createElement('span');
     titleSpan.textContent = title;
     const closeBtn = rootDocument.createElement('button');
+    closeBtn.className = 'btn';
     closeBtn.textContent = '\u00D7';
     closeBtn.addEventListener('click', () => {
       windowContainer.removeChild(win);
@@ -65,10 +66,12 @@ export function initUI(rootDocument = document) {
     amountInput.step = '0.01';
 
     const depositBtn = rootDocument.createElement('button');
+    depositBtn.className = 'btn';
     depositBtn.textContent = 'Deposit';
     depositBtn.type = 'submit';
 
     const withdrawBtn = rootDocument.createElement('button');
+    withdrawBtn.className = 'btn';
     withdrawBtn.textContent = 'Withdraw';
     withdrawBtn.type = 'button';
 
