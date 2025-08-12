@@ -1,36 +1,28 @@
-let windowCount = 0;
+import Phaser from 'phaser';
+import BootScene from './scenes/BootScene';
+import TellerScene from './scenes/TellerScene';
+import PersonalBankerScene from './scenes/PersonalBankerScene';
+import AccountingScene from './scenes/AccountingScene';
 
-const desktop = document.getElementById('desktop');
-const icons = document.querySelectorAll('.app-icon');
+const config = {
+  type: Phaser.AUTO,
+  scale: {
+    mode: Phaser.Scale.RESIZE,
+    parent: 'game',
+    width: window.innerWidth,
+    height: window.innerHeight,
+    min: {
+      width: 800,
+      height: 600
+    }
+  },
+  backgroundColor: '#1a1e36',
+  scene: [BootScene, TellerScene, PersonalBankerScene, AccountingScene]
+};
 
-icons.forEach(icon => {
-  icon.addEventListener('click', () => {
-    const app = icon.dataset.app;
-    openWindow(app);
-  });
+const game = new Phaser.Game(config);
+
+// Handle window resize
+window.addEventListener('resize', () => {
+  game.scale.resize(window.innerWidth, window.innerHeight);
 });
-
-export function openWindow(app) {
-  const win = document.createElement('div');
-  win.className = 'app-window';
-  win.dataset.index = windowCount++;
-
-  const header = document.createElement('header');
-  header.textContent = formatTitle(app);
-
-  const content = document.createElement('div');
-  content.className = 'content';
-  content.textContent = `${formatTitle(app)} content goes here.`;
-
-  win.appendChild(header);
-  win.appendChild(content);
-  desktop.appendChild(win);
-  return win;
-}
-
-function formatTitle(name) {
-  return name
-    .split(/[-_]/)
-    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-}
