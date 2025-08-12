@@ -30,4 +30,11 @@ describe('OS-like UI', () => {
     const header = document.querySelector('.window-header');
     expect(header.textContent).toContain('Customers');
   });
+
+  test('shows transaction form', () => {
+    const txIcon = document.querySelector('[data-app="transactions"]');
+    txIcon.click();
+    const form = document.querySelector('.window-content form');
+    expect(form).not.toBeNull();
+  });
 });

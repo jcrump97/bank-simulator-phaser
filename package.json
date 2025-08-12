@@ -20,6 +20,7 @@
     "http-server": "^14.1.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.0.0-beta.3",
-    "vite": "^6.0.6"
+    "vite": "^6.0.6",
+    "fake-indexeddb": "^5.0.2"
   }
 }
