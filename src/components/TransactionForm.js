@@ -6,8 +6,12 @@ export default class TransactionForm {
     this.accountManager = accountManager;
     this.onTransactionCreated = onTransactionCreated;
     this.container = scene.add.container(x, y);
-    
+
     this.entries = [];
+    // Array of DOM elements created by this form. Keeping track of these
+    // allows us to toggle their visibility when the form is shown or hidden.
+    this.domElements = [];
+
     this.createForm();
   }
 
@@ -37,6 +41,7 @@ export default class TransactionForm {
     
     const descInput = this.createInputField(-formWidth/2 + 150, -formHeight/2 + 80, 300, 'Enter transaction description');
     this.descriptionInput = descInput;
+    this.domElements.push(descInput.domElement);
     
     // Amount input
     const amountLabel = this.scene.add.text(-formWidth/2 + 30, -formHeight/2 + 130, 'Amount:', {
@@ -46,6 +51,7 @@ export default class TransactionForm {
     
     const amountInput = this.createInputField(-formWidth/2 + 150, -formHeight/2 + 130, 150, '0.00');
     this.amountInput = amountInput;
+    this.domElements.push(amountInput.domElement);
     
     // Transaction type selector
     const typeLabel = this.scene.add.text(-formWidth/2 + 30, -formHeight/2 + 180, 'Type:', {
@@ -55,6 +61,7 @@ export default class TransactionForm {
     
     const typeSelector = this.createTypeSelector(-formWidth/2 + 150, -formHeight/2 + 180);
     this.typeSelector = typeSelector;
+    this.domElements.push(typeSelector.domElement);
     
     // Account selector
     const accountLabel = this.scene.add.text(-formWidth/2 + 30, -formHeight/2 + 230, 'Account:', {
@@ -64,6 +71,7 @@ export default class TransactionForm {
     
     const accountSelector = this.createAccountSelector(-formWidth/2 + 150, -formHeight/2 + 230);
     this.accountSelector = accountSelector;
+    this.domElements.push(accountSelector.domElement);
     
     // Second account selector (for transfers)
     const account2Label = this.scene.add.text(-formWidth/2 + 30, -formHeight/2 + 280, 'To Account:', {
@@ -71,10 +79,14 @@ export default class TransactionForm {
       color: '#ffffff'
     });
     account2Label.setVisible(false);
+    this.account2Label = account2Label;
     
     const account2Selector = this.createAccountSelector(-formWidth/2 + 150, -formHeight/2 + 280);
     this.account2Selector = account2Selector;
     account2Selector.setVisible(false);
+    this.domElements.push(account2Selector.domElement);
+    // Hidden by default until a transfer is selected
+    account2Selector.domElement.style.display = 'none';
     
     // Preview section
     const previewLabel = this.scene.add.text(-formWidth/2 + 30, -formHeight/2 + 330, 'Preview:', {
@@ -107,9 +119,9 @@ export default class TransactionForm {
     
     // Set up event listeners
     this.setupEventListeners();
-    
-    // Initially hide the form
-    this.container.setVisible(false);
+
+    // Initially hide the form and its DOM elements
+    this.hide();
   }
 
   createInputField(x, y, width, placeholder) {
@@ -280,15 +292,15 @@ export default class TransactionForm {
 
   toggleSecondAccount() {
     const type = this.typeSelector.domElement.value;
-    const account2Label = this.container.list[10]; // Second account label
-    const account2Selector = this.container.list[11]; // Second account selector
-    
+
     if (type === 'transfer') {
-      account2Label.setVisible(true);
-      account2Selector.setVisible(true);
+      this.account2Label.setVisible(true);
+      this.account2Selector.setVisible(true);
+      this.account2Selector.domElement.style.display = 'block';
     } else {
-      account2Label.setVisible(false);
-      account2Selector.setVisible(false);
+      this.account2Label.setVisible(false);
+      this.account2Selector.setVisible(false);
+      this.account2Selector.domElement.style.display = 'none';
     }
   }
 
@@ -380,11 +392,21 @@ export default class TransactionForm {
 
   show() {
     this.container.setVisible(true);
+    // Show all associated DOM elements
+    this.domElements.forEach(el => {
+      el.style.display = 'block';
+    });
+    // Ensure optional elements match the current transaction type
+    this.toggleSecondAccount();
     this.updatePreview();
   }
 
   hide() {
     this.container.setVisible(false);
+    // Hide all DOM elements
+    this.domElements.forEach(el => {
+      el.style.display = 'none';
+    });
   }
 
   destroy() {
