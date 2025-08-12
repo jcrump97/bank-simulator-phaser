@@ -70,6 +70,19 @@ html, body {
   font-size: 1.2rem;
   cursor: pointer;
 }
+
+.info-section {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.info-section p {
+  margin: 0.2rem 0;
+}
 @media (max-width: 600px) {
   .app-icon {
     width: 70px;
@@ -83,5 +96,8 @@ html, body {
   }
   .window-header {
     font-size: 0.9rem;
+  }
+  .info-section {
+    font-size: 0.8rem;
   }
 }

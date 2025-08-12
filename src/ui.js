@@ -74,6 +74,21 @@ export function initUI(rootDocument = document) {
 
     const message = rootDocument.createElement('div');
 
+    const infoSection = rootDocument.createElement('div');
+    infoSection.className = 'info-section';
+
+    function updateInfo() {
+      const accountId = accountSelect.value;
+      const balance = accountManager.getAccountBalance(accountId);
+      const { profit, liquidity } = kpiService.getKPIs();
+      infoSection.innerHTML =
+        `<p>Balance: ${balance.toFixed(2)}</p>` +
+        `<p>Profit: ${profit.toFixed(2)}</p>` +
+        `<p>Liquidity: ${liquidity.toFixed(2)}</p>`;
+    }
+
+    accountSelect.addEventListener('change', updateInfo);
+
     function process(type) {
       const accountId = accountSelect.value;
       const amount = parseFloat(amountInput.value);
@@ -92,6 +107,7 @@ export function initUI(rootDocument = document) {
         ledger.postEntry(entry);
         kpiService.onEntryPosted(entry);
         message.textContent = 'Posted';
+        updateInfo();
       } catch (err) {
         message.textContent = 'Error: ' + err.message;
       }
@@ -112,6 +128,8 @@ export function initUI(rootDocument = document) {
     form.appendChild(withdrawBtn);
     container.appendChild(form);
     container.appendChild(message);
+    container.appendChild(infoSection);
+    updateInfo();
     return container;
   }
 
